@@ -1,41 +1,47 @@
 package com.venta.test;
 
+import static org.junit.Assert.assertNotNull;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import org.junit.Before;
-import org.junit.Test;
-import com.venta.dto.Categoria;
-import com.venta.dto.Producto;
 
-public class AddTest {
-	EntityManagerFactory enf;
-	EntityManager en;
-	@Before
-	public void iniciar(){
-		enf = Persistence.createEntityManagerFactory("venta");
-		en = enf.createEntityManager();
-	}
+import org.junit.*;
+
+import com.venta.proy.Categoria;
+import com.venta.proy.Producto;
+
+public class AddTest extends JPAUnitTest{
+	
+	
 	@Test
-	public void AddCategoria() {
-		en.getTransaction().begin();
-		Categoria ncat = new Categoria(1, "bebiba a");
-		Categoria ncat1 = new Categoria(2, "bebiba b");
-		en.persist(ncat);
-		en.persist(ncat1);
-		en.getTransaction().commit();
-		// ********************
-		Categoria c1 = en.find(Categoria.class, 1);
-		Categoria c2 = en.find(Categoria.class, 2);
-		en.getTransaction().begin();
-		Producto p11 = new Producto("Cerveza cuzqueña", 180, c1);
-		Producto p12 = new Producto("Cerveza pilsen", 200, c1);
-		Producto p21 = new Producto("Cerveza cristal", 100, c2);
-		Producto p22 = new Producto("Cerveza corona", 130, c2);
-		en.persist(p11);
-		en.persist(p12);
-		en.persist(p21);
-		en.persist(p22);
-		en.getTransaction().commit();
+	public void entityManagerFactoryOK() {
+		assertNotNull(emf);
 	}
+	
+	
+	@Test 
+	public void insertar() {
+	em.getTransaction().begin();
+		Categoria ncat = new Categoria("Quesos");
+		Categoria ncat1 = new Categoria("Gaseosa");
+	
+		em.persist(ncat);
+		em.persist(ncat1);
+		em.getTransaction().commit();
+	
+	
+	Categoria c = em.find(Categoria.class, 1);
+	Categoria c1 = em.find(Categoria.class, 2);
+	
+	em.getTransaction().begin();
+	Producto p = new Producto("Chedar",100,c);
+	Producto p1 = new Producto("Coca Cola",200,c1);
+	Producto p3 = new Producto("Inka Cola",200,c1);
+	em.persist(p);
+	em.persist(p1);
+	em.persist(p3);
+	em.getTransaction().commit();
+		
+	}
+
 }
